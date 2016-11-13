@@ -10,16 +10,7 @@ class ProductListWithFilter extends Component {
 
 	constructor(){
 		super();
-
-		var cart_list  = {};
-
-		for(var i = 0, l = data.product_keys.length; i < l; i++) {
-			var product_key =  data.product_keys[i]
-
-    		cart_list[product_key] = 0;
-		}
-
-		this.state = { cart_items: cart_list, product_key_array: data.product_keys } 
+		this.state = { cart_items: {}, product_key_array: data.product_keys } 
 	}
 
 	filterComponents(e) {
@@ -49,6 +40,29 @@ class ProductListWithFilter extends Component {
 		this.setState( { product_key_array: filtered_keys} )
 	}
 
+	// Methods used to trigger cart updates.
+	get_quantity(product_key){
+		var cart_items = this.state.cart_items
+		var quantiy = cart_items[product_key]
+
+		if ( typeof quantiy == 'undefined' ) {
+			return 0
+		} else {
+			return quantiy
+		}
+	}
+
+	set_quantity(product_key, quantiy){
+		var cart_items = this.state.cart_items
+
+		if (quantiy > 10)
+			return false
+
+		cart_items[product_key] = quantiy
+
+		this.setState( { cart_items: cart_items } )
+	}
+
 	add_to_cart(e) {
 		var target_product_key = e.target.parentElement.getAttribute('data-sku');
 
@@ -58,26 +72,25 @@ class ProductListWithFilter extends Component {
 		this.setState( { cart_items: cart_items } )
 	}
 
-
-	remove_item(e){
-		var target_product_key = e.target.parentElement.getAttribute('data-sku');
-		var cart_items = this.state.cart_items
-		cart_items[target_product_key] = 0
-
-		this.setState( { cart_items: cart_items } )
+	add_item(product_key){
+		var quantity = this.get_quantity(product_key)
+		this.set_quantity(product_key, quantity + 1)
 	}
 
-	set_quantity_for_product(product_key, quantity){
-		this.state.cart_items.product_key = quantity;
-	}
-	
 
 	render(){
 		return(
-			<div>
-				<ProductFilter filterComponents={ this.filterComponents.bind(this) } />
-				<ProductList product_key_array={ this.state.product_key_array } add_to_cart={ this.add_to_cart.bind(this) }/>
-				<Cart cart_list={ this.state.cart_items } remove_item={ this.remove_item.bind(this) } set_quantity_for_product={ this.set_quantity_for_product.bind(this) }/>
+			<div className='wrapper'>
+				<div className='product-wrapper'> 
+					<ProductFilter filterComponents={ this.filterComponents.bind(this) } />
+					<ProductList product_key_array={ this.state.product_key_array } 
+					             set_quantity={ this.set_quantity.bind(this) }
+					             get_quantity= { this.get_quantity.bind(this) }/>
+				</div>
+
+				<div className='cart-wrapper'>
+					<Cart cart_list={ this.state.cart_items } set_quantity={this.set_quantity.bind(this)} get_quantity={this.get_quantity.bind(this)}/>
+				</div>
 			</div>
 		)
 	}

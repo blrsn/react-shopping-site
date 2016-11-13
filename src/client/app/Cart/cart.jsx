@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 
 import CartItem from './cart_item.jsx'
+import CartTotal from './cart_total.jsx'
 
 var data = require('../product_json.js')
 
@@ -16,15 +17,18 @@ class Cart extends Component {
 				<ul>
 				
 					{ Object.keys(props.cart_list).map(function(key) {
-   						return <CartItem 
+   						return <CartItem
    							key={key} 
    							product_key={key}
-   							quantity={props.cart_list[key]} 
-   							remove_item={ props.remove_item.bind(this) } 
-   							set_quantity_for_product={ props.set_quantity_for_product.bind(this) }/>
+   							quantity={ props.cart_list[key] } 
+   							set_quantity={ props.set_quantity }
+   							get_quantity={ props.get_quantity }
+   							/>
 					})}
 				
 				</ul>
+
+				<CartTotal cart_list= { props.cart_list }/>
 			</div>
 			)
 	}

@@ -15,30 +15,35 @@ class CartItem extends Component {
 	componentWillReceiveProps(nextprops) {
 		this.setState( { product: data.product[ nextprops.product_key ],
 					   quantity: nextprops.quantity } )
-
 	}
 
-	handleQuantityChange(e) {
-		this.setState( { quantity: e.target.value } )
-
-
-		var target_product_key = e.target.parentElement.parentElement.getAttribute('data-sku');
-		var quantity = e.target.value;
-
-		this.props.set_quantity_for_product( target_product_key, quantity )
+	handleQuantityChange(product_key, e) {
+		var quantity = parseInt(e.target.value) ;
+		this.props.set_quantity(product_key, quantity )
 	}
 
+	remove_item(product_key){
+		this.props.set_quantity(product_key, 0)
+	}
 
 	render(){
+
+		var product = this.state.product;
+		var quantity = this.state.quantity;
 
 		if (this.state.quantity > 0 ) {
 
 			return(
-				<li data-sku={ this.state.product.sku } key={ this.state.product.sku } >
-					<div>name: {this.state.product.name}</div>
-					<div>quantity: <QuantityDropdown select={this.state.quantity} handle_quantity_change={ this.handleQuantityChange.bind(this) }/></div>
-					<div>price: {this.state.quantity * this.state.product.price} </div>
-					<button data-sku={ this.state.product.sku } onClick={ this.props.remove_item.bind(this) }>Delete</button>  
+				<li className='cart-item'>
+					<div className='img-name' className='cart-child'>
+						<img src={ product.img_link } alt="Smiley face" width='65px'></img>
+						<div>{ product.name }</div>
+						<a onClick={ this.remove_item.bind(this, product.sku) }>Delete</a>
+					</div>
+
+					<div className='cart-child'>quantity: <QuantityDropdown select={this.state.quantity} handle_quantity_change={ this.handleQuantityChange.bind(this, product.sku ) }/></div>
+
+					<div className='cart-child' className='price'>Rs.{ quantity * product.price } </div>
 				</li>
 			)
 		} else {

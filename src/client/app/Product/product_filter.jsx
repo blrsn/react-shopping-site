@@ -10,8 +10,7 @@ class ProductFilter extends Component {
 	render(){
 		return(
 			<div>
-				<label>Search product</label>
-				<input type='text' onKeyUp={ this.filter.bind(this) }></input>
+				<input type='text' onKeyUp={ this.filter.bind(this) } placeholder='Search Products'></input>
 			</div>
 		)
 	}
