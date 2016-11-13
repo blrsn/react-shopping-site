@@ -1,4 +1,4 @@
-# React Shopping Site
+# React Shopping Site - [Demo](http://htmlpreview.github.io/?https://github.com/larson004/react-shopping-site/blob/master/index.html)
 
 1. Create a shopping website with Product listing and Cart on the side.
 2. Use the products.json for the list of products. Group it by category names
